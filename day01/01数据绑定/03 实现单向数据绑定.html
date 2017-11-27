@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h2></h2>
+    <script>
+     // 需求: 希望h2标签中的内容终始和objA.msg值保持一致
+        // 1. 监听objB, 让objB代理objA的msg属性
+        // 2. 当我们修改objB的.msg属性时: 修改objA.msg, 还要把objA.msg赋值以h2标签中
+        var objA = {}
+        var objB = {}
+        Object.defineProperty(objB,'msg',{
+            get:function(){
+                return objA.msg
+            },
+            set:function(arg){
+                objA.msg = arg
+                var Oh2 = document.querySelector('h2')
+                Oh2.innerHTML = objA.msg
+            }
+        })
+        objB.msg = 'ss'
+    </script>
+</body>
+</html>

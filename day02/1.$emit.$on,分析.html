@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>大</title>
+</head>
+<body>
+  <h1>$emit,$on分析</h1>
+</body>
+</html>
+<script>
+  var obj = {} // 假设所有name 和 fn的组合都存储在这个对象
+  // obj.xx = {}
+  // obj['xx']
+  // var tmp = 'xx'
+  // obj[tmp]  obj.xx
+  // Object.defineProperty
+  function on (name, fn) {
+    // 其实是把 name 和 fn 一起存储起来了
+    // obj.name = fn // 给obj添加的属性名是name
+    obj[name] = fn // 给obj添加的属性名, 是name变量的值
+  }
+
+  function emit (name, data) {
+    // 根据这个 name 去找到对应fn
+    // 然后再这个找到的方法，并把data作为参数传递这个方法
+    var fn = obj[name]
+    fn(data)
+  }
+</script>
+<script>
+  on('test', function () { alert('我是test')})
+  on('test2', function () { alert('我是test2')})
+</script>

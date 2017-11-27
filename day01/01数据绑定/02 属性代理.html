@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+   <script>
+   var obj1 = {
+    msg: '哈哈，我真的是A'
+   }
+   var obj2 = {}
+   //属性代理:通过对obj2属性的监听实现对obj1属性的监听
+   Object.defineProperty(obj2,'msg',{
+       get:function(){
+           //通过get方法间接的访问obj1的属性
+           return obj1.msg
+       },
+       set:function(arg){
+             //通过set方法间接的设置obj1的属性
+            obj1.msg = arg;
+       }
+       
+   })
+   console.log(obj1.msg)//在没调用obj2的set方法前直接访问obj1.msg并不会有什么影响
+   console.log(obj2.msg) // console.log(get())
+    obj2.msg = 998 // set(998)
+    console.log(obj1.msg)//此时obj1已改变
+   </script>
+</body>
+</html>

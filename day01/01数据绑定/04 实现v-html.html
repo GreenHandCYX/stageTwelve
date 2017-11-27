@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h2 v-html='msg'></h2>
+    <input type="text" v-model="msg">
+    <script>
+    // 1.让obj代理data的msg属性
+    // 2. 单向数据绑定: (让v-html="msg"标签与js中data.msg绑定)
+    //     当我们修改data.msg时，希望v-html="msg" 也变化
+
+    var data = {}
+    var obj = {}
+    Object.defineProperty(obj,'msg',{
+        get:function(){
+            return data.msg
+        },
+        set:function(arg){
+            data.msg = arg
+            var text = document.querySelector('[v-html="msg"]')
+            text.innerHTML = data.msg
+            var inp = document.querySelector('[v-model="msg"]')
+            inp.value = data.msg
+        }
+    })
+    obj.msg = 'ss'
+
+    </script>
+</body>
+</html>

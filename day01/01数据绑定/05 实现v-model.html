@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" v-model="msg">
+    <script>
+    // 原理:1.模型到视图:用defineProperty配合属性代理监听数据的变化
+    var data = {
+        msg: '哈哈',
+        name: '圭', // for in
+      }
+      var obj = {}
+      Object.defineProperty(obj,'msg',{
+          get:function(){
+              return data.msg
+          },
+          set:function(arg){
+              data.msg = arg
+              var inp = document.querySelector('[v-model="msg"]')
+              inp.value = data.msg
+              console.log(data.msg)
+          }
+      })
+            //2.视图到模型，事件监听(这里用Input做监听因为change事件触发需要值改变并且失焦)
+    var inp = document.querySelector('[v-model="msg"]')
+    inp.oninput = function(e){
+        var val = e.target.value;
+        obj.msg = val;
+    }
+   
+    </script>
+</body>
+</html>
