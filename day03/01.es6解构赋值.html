@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>解构</title>
+</head>
+<body>
+  
+</body>
+</html>
+<script>
+  // {name: '小明', age: '18', sex: '男'}
+  // var name = obj.name
+
+  // var {name: xxx, age: yyy, sex: zzz} = {name: '小明', age: '18', sex: '男'}
+
+  // var obj = {name: '小明', age: '18', sex: '男'}
+  // var {name: xxx, age: yyy, sex: zzz} = obj
+  
+  var xxx = obj.name
+  var yyy = obj.age
+  var zzz = obj.sex
+
+
+</script>
+<script>
+  // 情况A: 普通没有解构
+  function helloA (res, msg) {
+
+  }
+  helloA({data:'997',age: 18}, '你好吗')
+
+
+  // 情况B: 使用解构，简单使用
+  function helloB (res, msg) {
+    var {data, age} = res // var data = res.data; var age = res.age
+    // var {data} = res
+    console.log(data, age)
+  }
+  helloB({data:'997',age: 18}, '你好吗')
+
+
+  // 情况C: 使用解构, 直接在形参中进行解构
+  function helloC ({data}, msg) {
+    console.log(data)
+  }
+  helloC({data:'997',age: 18}, '你好吗')
+</script>

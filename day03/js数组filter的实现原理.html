@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+  
+        var teachers = [
+            { name: '小明', age: 18, sex: '男' },
+            { name: '小月', age: 18, sex: '女' },
+            { name: '小天', age: 18, sex: '女' },
+            { name: '小白', age: 18, sex: '男' },
+        ]
+        Array.prototype.myFilter = function(callback){
+            var arr = [];
+            for (var i = 0; i < this.length; i++) {
+                if(callback(this[i],i)){
+                    arr.push(this[i])
+                }
+            }
+            return arr;
+        }
+
+        var arr = teachers.myFilter(function(ele,index){
+            if(ele.sex == '女') return true;
+            return false
+        })
+        console.log(arr)
+    </script>
+</body>
+
+</html>

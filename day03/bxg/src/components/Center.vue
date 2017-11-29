@@ -7,7 +7,7 @@
                             <label for="" class="col-xs-3 control-label">姓名</label>
                             <div class="col-xs-5">
                                 <p class="form-control-static">{{user.username}}</p>
-                                <input type="hidden" name="username" :value="user.username">
+                                <input type="hidden"  :value="user.username">
                             </div>
                         </div>
                         <div class="form-group">
@@ -26,7 +26,7 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">昵称</label>
                             <div class="col-xs-5">
-                                <input name="nickname"
+                                <input 
                                 v-model="user.nickname"
                                 type="text" class="form-control input-sm">
                             </div>
@@ -36,13 +36,13 @@
                             <div class="col-xs-3">
                                 <label class="radio-inline">
                          
-                                    <input name="gender"
+                                    <input 
                                      v-model="user.gender"
                                      value="0"
                                      type="radio" > 男
                                 </label>
                                 <label class="radio-inline">
-                                    <input  name="gender"
+                                    <input  
                                     v-model="user.gender"
                                     value="1"
                                     type="radio"> 女
@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">出生日期</label>
                             <div class="col-xs-5">
-                                <input   name="birthDay"
+                                <input  
                                 v-model="user.birtyDay"
                                 type="text" class="form-control input-sm">
                             </div>
@@ -60,14 +60,14 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">籍贯</label>
                             <div class="col-xs-5" v-if="region != null">
-                                <select name="province" v-model="nowP" class="form-control input-sm">
+                                <select v-model="user.province" class="form-control input-sm">
                                     <option :value="item.number" v-for="(item,index) in region.p['000000']" :key="index">{{item.name}}</option>
                                 </select>
-                                 <select name="city" v-model="nowC" class="form-control input-sm">
-                                    <option :value="item.number" v-for="(item,index) in region.c[nowP]" :key="index">{{item.name}}</option>
+                                 <select v-model="user.city" class="form-control input-sm">
+                                    <option :value="item.number" v-for="(item,index) in region.c[user.province]" :key="index">{{item.name}}</option>
                                 </select>
-                                 <select name="district" v-model="nowD" class="form-control input-sm">
-                                    <option :value="item.number" v-for="(item,index) in region.d[nowC]" :key="index">{{item.name}}</option>
+                                 <select v-model="user.district" class="form-control input-sm">
+                                    <option :value="item.number" v-for="(item,index) in region.d[user.city]" :key="index">{{item.name}}</option>
                                 </select>
                                
                             </div>
@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">手机号码</label>
                             <div class="col-xs-5">
-                                <input name="phone"
+                                <input 
                                 v-model="user.phone"
                                 type="text" class="form-control input-sm">
                             </div>
@@ -83,7 +83,7 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">电子邮箱</label>
                             <div class="col-xs-5">
-                                <input name="email"
+                                <input 
                                 v-model="user.email"
                                 type="text" class="form-control input-sm">
                             </div>
@@ -92,7 +92,7 @@
                             <label for="" class="col-xs-3 control-label">入职日期</label>
                             <div class="col-xs-5">
                                 <input
-                                name="joinDate"
+               
                                 v-model="user.joinDate"
                                 type="text" class="form-control input-sm">
                             </div>
@@ -104,7 +104,7 @@
                             class="col-xs-5 ckeditor">
                                 <textarea
                                 v-model="user.introduce"
-                                name="introduce" rows="15" class="form-control input-sm"></textarea>
+                                rows="15" class="form-control input-sm"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -177,13 +177,14 @@ export default {
             }
         },
         submit(){
-            console.log(this.$refs.form)
-            var data = new FormData(this.$refs.form)
-            this.$axios.post('http://bxg.huoqishi.net/userinfo',data).then(res=>{
-                 if(res.data.errcode !==0){
-                    return alert(res.data.errmsg)
+            // console.log(this.$refs.form)
+            // var data = new FormData(this.$refs.form)
+            if(!this.user.nickname) return alert('昵称不能为空');
+            this.$axios.post('http://bxg.huoqishi.net/userinfo',this.user).then(({data})=>{
+                 if(data.errcode !==0){
+                    return alert(data.errmsg)
                 }
-               alert(res.data.errmsg)
+               alert(data.errmsg)
             })
         }
         

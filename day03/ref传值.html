@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        //通过extend定义全局组件
+        var Son = Vue.extend({
+            data(){
+                return {
+                    msg:'我是Son的msg'
+                }
+            },
+            template:
+            `<div>
+                <h1>我是Son</h1>
+            </div>`,
+            methods:{
+                hello(arg){
+                    alert(arg)
+                }
+            }
+        })
+        var App = Vue.extend({
+            data(){
+                return {
+                    msg:'我是App的msg'
+                }
+            },
+            components:{
+                Son
+            },
+            template:
+            `<div>
+                <h1>我是App</h1>
+                <Son ref="mySon"></Son>
+                <button @click="test">发给Son</button>
+            </div>`,
+            mounted(){
+                //这里通过ref绑定的mySon是Son组件的一个实例,因此也就可以使用Son组件的方法和属性了
+                alert(this.$refs.mySon.msg) 
+            },
+            methods:{
+                test(){
+                     //同时也能通过这个实例对象的方法的参数也能为子组件传值了
+                     this.$refs.mySon.hello(this.msg)
+                }
+            }
+        })
+      
+        const vm = new Vue({
+            el:'#app',
+            render:h=>h(App)
+        })
+    </script>
+</body>
+</html>

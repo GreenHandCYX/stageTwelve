@@ -199,7 +199,7 @@ npm安装时  后面加--cache-min 9999999可以在下载时先从缓存中下�
 
 # vue-cli
 
-除了自vue-cli己搭建外还可以使用脚手架自动生成文件夹结构
+除了自己搭建外还可以使用脚手架vue-cli自动生成文件夹结构
 
 vue-cli可以自动生成vue的项目结构
 
@@ -287,9 +287,9 @@ new Vue({router})
 
 //两种形式
 
-//标签(命名路由)`<router-link :to={name:''}></router-link>`
+//标签(命名路由)`<router-link :to="{name:'',params:{id:}}"></router-link>`
 
-//js方法触发this.$router.push()
+//js方法触发this.$router.push({name:'',params:{id:}})
 
 
 
@@ -455,12 +455,17 @@ Vue.use(function(Vue){
 // 这里的$只是一个普通字符
 Vue.prototype.$axios=axios
 })
-
 ```
 
 
 
 })
+
+
+
+
+
+
 
 
 
@@ -561,6 +566,8 @@ hello(function (a, b) {  a = {name: '小月月', age: 19}; b=[10, 1,2,3,5]})
 
 ##### 统一的让每一次ajax请求的withCredentials为true
 
+#### axios拦截器，拦截请求的,对请求作处理
+
 ```js
 
 //在发送cors跨域请求时默认不会将cookie携带在请求头中发给服务端
@@ -575,6 +582,14 @@ axios.interceptors.request.use(config=>{
 ```
 
 
+
+#### axios拦截器，拦截响应的,对响应作处理
+
+```js
+axios.interceptord.response.use(function(res){
+	return res;//必须返回res，否则请求结束的then中不会返回任何数据
+})
+```
 
 
 
@@ -683,3 +698,517 @@ axios.interceptors.request.use(config=>{
 `$emit`和`$on`的实现原理
 
 ![03.$emit, $on分析](.\img\03.$emit, $on分析.jpg)
+
+
+
+
+
+
+
+# 函数参数的解构赋值（注在箭头函数中使用时不能省略小括号）
+
+function abc({name,age}){
+}
+
+abc({name:'cyx',age:18})
+
+
+
+
+
+
+
+
+
+# computed与method的区别
+
+computed在js中调用时不用加括号this.computed
+
+监听某个属性时若属性修改了会调用两次(缓存造成的)
+
+
+
+
+
+
+
+
+
+# ref的使用,在父子组件之间传递数据
+
+在父组件中给子组件的模板标签中加$refs代表子组件的实例对象，这样就可以访问子组件实例的属性及方法了，也可以给子组件传值了
+
+```vue
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        //通过extend定义全局组件
+        var Son = Vue.extend({
+            data(){
+                return {
+                    msg:'我是Son的msg'
+                }
+            },
+            template:
+            `<div>
+                <h1>我是Son</h1>
+            </div>`,
+            methods:{
+                hello(arg){
+                    alert(arg)
+                }
+            }
+        })
+        var App = Vue.extend({
+            data(){
+                return {
+                    msg:'我是App的msg'
+                }
+            },
+            components:{
+                Son
+            },
+            template:
+            `<div>
+                <h1>我是App</h1>
+                <Son ref="mySon"></Son>
+                <button @click="test">发给Son</button>
+            </div>`,
+            mounted(){
+                //这里通过ref绑定的mySon是Son组件的一个实例,因此也就可以使用Son组件的方法和属性了
+                alert(this.$refs.mySon.msg) 
+            },
+            methods:{
+                test(){
+                     //同时也能通过这个实例对象的方法的参数也能为子组件传值了
+                     this.$refs.mySon.hello(this.msg)
+                }
+            }
+        })
+      
+        const vm = new Vue({
+            el:'#app',
+            render:h=>h(App)
+        })
+    </script>
+</body>
+</html>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# bind与apply、call最大的区别就是：bind不会立即调用，其他两个会立即调用
+
+
+
+
+
+
+
+
+
+
+
+# Vue.extend()也可以设置一个全局的组件
+
+```js
+ var App = Vue.extend({
+            data(){
+                return {
+                    msg:'我是App的msg'
+                }
+            },
+            template:
+            `<div>
+                <h1>我是App</h1>
+            </div>`,
+            mounted(){
+                
+            }
+        })
+```
+
+
+
+
+
+
+
+# vue中v-on绑定事件时可以直接在v-on中写逻辑判断表达式
+
+
+
+
+
+# 页面搜索功能的实现:
+
+每次搜索都请求后台
+
+先预加载所有的数据到本地然后搜索从本地查找即可
+
+先在已有数据里面搜索，不够再到服务器请求
+
+
+
+
+
+
+
+# nprogress
+
+http://ricostacruz.com/nprogress/
+
+
+
+
+
+# js数组的扩展方法:
+
+### filter
+
+js的filter方法可以返回数组操作返回值为true的组成的数组 
+
+```js
+filter原理  
+
+var teachers = [
+            { name: '小明', age: 18, sex: '男' },
+            { name: '小月', age: 18, sex: '女' },
+            { name: '小天', age: 18, sex: '女' },
+            { name: '小白', age: 18, sex: '男' },
+        ]
+        Array.prototype.myFilter = function(callback){
+            var arr = [];
+            for (var i = 0; i < this.length; i++) {
+                if(callback(this[i],i)){
+                    arr.push(this[i])
+                }
+            }
+            return arr;
+        }
+
+        var arr = teachers.myFilter(function(ele,index){
+            if(ele.sex == '女') return true;
+            return false
+        })
+        console.log(arr)
+```
+
+
+
+
+
+### find()
+
+ `**find()**` 方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 [`undefined`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/undefined)。
+
+```
+function isBigEnough(element) {
+  return element >= 15;
+}
+
+[12, 5, 8, 130, 44].find(isBigEnough); // 130
+```
+
+
+
+### reduce
+
+`**reduce()**` 方法对累加器和数组中的每个元素（从左到右）应用一个函数，将其减少为单个值。
+
+```
+var total = [0, 1, 2, 3].reduce(function(sum, value) {
+  return sum + value;
+}, 0);
+// total is 6
+
+var flattened = [[0, 1], [2, 3], [4, 5]].reduce(function(a, b) {
+  return a.concat(b);
+}, []);
+// flattened is [0, 1, 2, 3, 4, 5]
+```
+
+
+
+
+
+
+
+
+
+
+
+# vuex
+
+### 概念：
+
+> 把数据放到全局变量中,全局变量会导致变量污染
+>
+> 
+>
+> vuex中也提供了一个类似全局变量的东西来存储数据,vuex中提供了一个构造函数Store
+>
+> 
+>
+> Store(所有组件都可以用)包含数据(状态),也包含修改数据的方法(通常另放到一个包中)
+
+```js
+import Vuex from 'vuex'
+
+const store = new Vuex.Store({
+
+	state:{
+
+	name:'cyx',
+
+	age:18
+
+	}
+
+})
+
+store.state.name
+
+```
+
+
+
+### 注意:
+
+> 在组件中通过store引入即可在当前组件中使用this.$state
+>
+> 
+>
+> Vuex不推荐在store之外的地方修改state中的数据，如果要修改一定要在mutations中修改，所以也就不推荐将state的数据放在data中
+>
+> 规定只要是在state中的数据,都通过计算属性来在组件中使用，因为双向数据绑定可以直接修改data中的值
+>
+> 
+>
+> 在组件中通过this.$store.commit()调用mutation,第一个参数为mutation中的方法，之后的参数会追加在mutation的方法的state参数之后
+
+
+
+
+
+
+
+### 总结:数据和修改数据的方法写在Store中
+
+取数据：this.$store.state   （建议配合计算属性去取，并在组件中呈现）
+
+改数据:this.$store.commit('mutations中定义的方法名',其他参数)
+
+
+
+
+
+
+
+
+
+### actions与mutations的关联:
+
+//actions和mutations差不多都是用来定义修改state的方法的
+
+//约定:     mutations中不要写异步代码(setTimeout)
+
+​		把异步代码写在actions中，然后在action中调用mutations的方法,
+
+actions通过this.$store.dispatch(actions中的方法名','小天')
+
+actions可以让事件异步执行
+
+```js
+var store = Vuex.Store({
+  state:{
+    name:'cyx'
+  },
+  mutations:{
+    changeName(state,arg){
+      //不建议在这里执行定时器
+      state.name = arg
+    }
+  },
+  
+ actions:{
+   //与mutations方法可以同名但是并不是一样的
+   changeName2(content,arg){
+     //content相当于store，可以调用mutations方法
+     setTimeout(function(){
+       content.commit('changeName',arg)
+     },300)
+   }
+ }
+  
+})
+
+
+
+
+
+
+this.$state.dispatch('changeName2','xiao')
+```
+
+
+
+
+
+
+
+
+
+### vuex的名词
+
+store(仓库,包含下面的所有东西)
+
+state(状态),
+mutations(定义修改状态的方法)
+commit (调用mutations中定义的方法)
+actions (写异步代码，并在异步代码中调用commit)
+dispatch (调用actions中定义的方法)
+
+![vuex2](.\img\vuex2.png)
+
+
+
+
+
+### 代码
+
+store.js
+
+```js
+//引入vue和vuex
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+
+
+//创建Store的实例对象（仓库,类似于全局变量，用来存储公有数据及操作数据的方法）
+const Store = new Vuex.Store({
+    //状态，存储数据，相当于data，
+    //但是所有的组件都可以使用
+    state:{
+        name:'cyx',
+        age:18
+    },
+    //相当于组件中的methods
+    //专门用来处理state中的值的非异步逻辑
+    //vue规定使用mutations处理state的数据
+    //定义的方法的第一个参数指向state
+    mutations:{
+        changeName:function(state,arg){
+            state.name = arg
+        }
+    },
+    //通常mutations不做异步代码(定时器,ajax请求等异步事件)
+    //通过actions来处理异步事件
+    //actions的方法中的第一个参数为content指向store,可以通过它调用mutations中的方法
+    actions:{//方法名可以与mutations中的一致
+        changeName2:function(content,arg){
+            setTimeout(function(){
+                //调用mutations中的方法
+                content.commit('changeName',arg)
+            },2000)
+        }
+    }
+})
+
+```
+
+
+
+
+
+index.js
+
+```js
+import Vue from 'vue'
+import App from './App.vue'
+
+
+//引入全局的仓库
+import store from './store'
+
+
+const vm = new Vue({
+  el: '#box',
+  store:store,//注册后所有组件就都有一个this.$store属性了
+  render: function (handler) {
+    return handler(App)
+  }
+})
+```
+
+
+
+
+
+
+
+App.vue
+
+```vue
+<template>
+  <div>
+   {{name}}
+    <h1>我是App.vue</h1>
+    <button @click="edit">edit</button>
+    <button @click="run">推迟两秒执行</button>
+  </div>
+</template>
+<script>
+export default {
+  //可以访问全局的仓库
+  //一般不将state的绑定到data上，因为双向绑定会直接操作data这有悖vuex的规定
+  //通常将state绑定在计算属性上
+  created(){
+    console.log(this.$store.state)
+  },
+  computed:{
+    name(){
+      //直接通过计算时你属性使用state中的数据
+      return this.$store.state.name
+    }
+  },
+  
+  methods:{
+    edit(){
+      //通过this.$store.commit('mutations中的方法名',arg)来调用store的mutations中的方法对state进行修改 
+      this.$store.commit('changeName','haha')
+    },
+    run(){
+      //通过this.$store.dispatch('actions中的方法名',arg)来调用store的actions中的方法
+      this.$store.dispatch('changeName2','xixi')
+    }
+  }
+}
+</script>
+
+```
+
