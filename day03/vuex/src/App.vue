@@ -16,7 +16,7 @@ export default {
   },
   computed:{
     name(){
-      //直接通过计算时你属性使用state中的数据
+      //直接通过计算属性使用state中的数据
       return this.$store.state.name
     }
   },

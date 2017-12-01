@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 
-//创建Store的实例对象（仓库,类似于全局变量，用来存储公有数据及操作数据的方法）
+//创建Store的实例对象（仓库,类似于全局变量，用来存储公有数据及操作数据的方法,不同于全局变量的是此store是响应式的）
 const Store = new Vuex.Store({
     //状态，存储数据，相当于data，
     //但是所有的组件都可以使用

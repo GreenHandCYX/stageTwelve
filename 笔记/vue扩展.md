@@ -724,7 +724,7 @@ abc({name:'cyx',age:18})
 
 computed在js中调用时不用加括号this.computed
 
-监听某个属性时若属性修改了会调用两次(缓存造成的)
+监听某个属性时属性修改了会调用两次(缓存造成的)
 
 
 
@@ -736,7 +736,7 @@ computed在js中调用时不用加括号this.computed
 
 # ref的使用,在父子组件之间传递数据
 
-在父组件中给子组件的模板标签中加$refs代表子组件的实例对象，这样就可以访问子组件实例的属性及方法了，也可以给子组件传值了
+在父组件中给子组件的模板标签中加ref代表子组件的实例对象，这样就可以访问子组件实例的属性及方法了，也可以给子组件传值了
 
 ```vue
 <!DOCTYPE html>
@@ -953,7 +953,7 @@ var flattened = [[0, 1], [2, 3], [4, 5]].reduce(function(a, b) {
 
 
 
-
+### map返回操作返回值组成的数组
 
 
 
@@ -991,7 +991,6 @@ const store = new Vuex.Store({
 })
 
 store.state.name
-
 ```
 
 
@@ -1138,7 +1137,6 @@ const Store = new Vuex.Store({
         }
     }
 })
-
 ```
 
 
@@ -1192,7 +1190,7 @@ export default {
   },
   computed:{
     name(){
-      //直接通过计算时你属性使用state中的数据
+      //直接通过计算属性使用state中的数据
       return this.$store.state.name
     }
   },
@@ -1209,6 +1207,5 @@ export default {
   }
 }
 </script>
-
 ```
 
