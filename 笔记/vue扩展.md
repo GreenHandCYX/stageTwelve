@@ -1209,3 +1209,121 @@ export default {
 </script>
 ```
 
+
+
+
+
+
+
+
+
+
+
+# history.pushState(null,null,'/test')
+
+可以达到类似hash变化的效果(更改地址栏而不刷新页面),这样就不需要在地址栏加#
+
+在路由监听时需设置mode:'history'
+
+```js
+new VueRouter({
+    mode: 'history',
+    routes: [
+        { path: '*', component: NotFoundComponent }
+    ]
+})
+```
+
+
+
+
+
+
+
+# 在路由中设置404页面或其他不存在的路由时跳转到一个给定的页面
+
+`{name:'index',path:'*',redirect:'/home'}`
+
+`{name:'index',path:'*',component:404组件}`
+
+
+
+
+
+
+
+
+
+# vue脚手架设置读取路径别名
+
+vue脚手架设置js读取路径,这样在引用common文件内容的时候就可以直接通过common/而不需要考虑前面的路径问题了
+
+在css中通过`@import '~common'`也就可以找到别名所指路径
+
+![Snipaste_2017-12-04_21-25-03](.\img\Snipaste_2017-12-04_21-25-03.png)
+
+
+
+
+
+
+
+
+
+
+
+# 项目扩展
+
+babel-runtime用于将es6语法转为es5
+
+fast-click解决移动端click点击事件的延迟
+
+​	使用时需要`import 'fastclick'`引入
+
+​	然后`fastclick.attact(document.body)`
+
+babel-polyfill对es6的api(如promise)进行转义以使用
+
+​	使用时需要在顶部引入`import 'babel-polyfill'`引入
+
+
+
+![Snipaste_2017-12-04_21-47-50](.\img\Snipaste_2017-12-04_21-47-50.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# router-link扩展
+
+`<router-link tag='div'  class='active' to='/'>`
+
+其中tag属性指router-link要渲染为什么标签,默认不写为a标签
+
+class属性指点击当前导航时该导航的样式
+
+
+
+
+
+
+
+# 引入组件的扩展
+
+*组件名首字母应大写，并且使用时用-处理驼峰命名*
+
+`import MHeader from 'components/m-header/m-header'`
+
+`<m-header></m-header>`

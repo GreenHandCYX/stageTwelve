@@ -27,7 +27,7 @@ const router = new VueRouter({
                 {name:'tecedit',path:'/tecedit:id',component:TecEdit}
             ]
         },
-        {name:'index',path:'/',redirect:'/home'}
+        {name:'index',path:'*',redirect:'/home'}
     ]
 })
 
