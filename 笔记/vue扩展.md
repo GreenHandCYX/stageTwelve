@@ -1256,7 +1256,7 @@ new VueRouter({
 
 # vue脚手架设置读取路径别名
 
-vue脚手架设置js读取路径,这样在引用common文件内容的时候就可以直接通过common/而不需要考虑前面的路径问题了
+vue脚手架在webpack.base.config.js设置文件读取路径的别名,这样在引用common文件内容的时候就可以直接通过common/而不需要考虑前面的路径问题了
 
 在css中通过`@import '~common'`也就可以找到别名所指路径
 

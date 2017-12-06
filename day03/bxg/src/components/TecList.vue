@@ -89,7 +89,7 @@ export default {
             }
           }).then( ({data}) => {
             
-            this.teachers =this.searchArr= this.arr = data.teachers
+            this.teachers =this.searchArr = data.teachers
             this.page = page
             this.total = data.total
           })
