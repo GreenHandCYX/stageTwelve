@@ -1327,3 +1327,428 @@ class属性指点击当前导航时该导航的样式
 `import MHeader from 'components/m-header/m-header'`
 
 `<m-header></m-header>`
+
+
+
+
+
+
+
+
+
+# 移动端1px边框解决方式
+
+```css
+   /*处理原理:
+      设备像素比dpr + 伪类 + transform:scale 
+     */
+     @media (-webkit-min-device-pixel-ratio:3),(min-device-pixel-ratio:3){
+      .border-1px{
+        position: relative
+      }
+      .border-1px::after{
+        content: ' ';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        border-top: 1px solid #000;
+        -webkit-transform: scaleY(.3);
+        transform: scaleY(0.3)
+      }
+     }
+     
+```
+
+
+
+
+
+# encodeURIComponent() 
+
+encodeURIComponent() 函数可把字符串作为 URI 组件进行编码,即转为浏览器地址栏可识别的编码格式
+
+
+
+
+
+# 处理JSONP跨域需使用jsonp包
+
+https://npm.taobao.org/package/jsonp
+
+jsonp(url,option,fn)
+
+//option中包含param(jsonp传递的回调函数参数字段名字默认为callback),timeout请求超时时间,prefix为回调函数加前缀,name回调函数的名字
+
+通常与promise结合封装
+
+```js
+import originJSONP from 'jsonp'
+
+/* 结合promise封装jsonp方法 */
+export default function jsonp(url, data, option) {
+  /* url:访问地址
+   * data:请求参数，此处为json对象需作处理
+   * option:jsonp方法所需的内置参数，例如传递参数字段callback
+   */
+  url += (url.indexOf('?') === -1 ? '?' : '&') + formatParmas(data)
+  return new Promise((resolve, reject) => {
+    /**
+     * url:访问地址
+     * option设置
+     * fn回调函数，参数为错误和返回的数据
+     */
+    originJSONP(url, option, (err, res) => {
+      if (!err) {
+        resolve(res)
+      } else {
+        reject(res)
+      }
+    })
+  })
+}
+
+function formatParmas(data) {
+  /**
+   * 将json格式的请求参数转为key=val&key1=val1
+   */
+  let str = ''
+  for (var key in data) {
+    let val = data[key] ? data[key] : ''
+    str += `&${key}=${encodeURIComponent(val)}`
+  }
+  return str ? str.substring(1) : ''
+}
+```
+
+
+
+
+
+
+
+
+
+# Object.*assign*()
+
+`Object.assign`方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
+
+```js
+const source2 = { c: 3 };
+Object.assign(target, source1, source2);
+target // {a:1, b:2, c:3}
+```
+
+`Object.*assign*`方法的第一个参数是目标对象，后面的参数都是源对象。
+
+当第一个参数为一个空对象时可用于合并一个新的对象
+
+
+
+
+
+
+
+
+
+# 插槽slot
+
+> ### [单个插槽](https://cn.vuejs.org/v2/guide/components.html#单个插槽)
+>
+> 除非子组件模板包含至少一个 `<slot>` 插口，否则父组件的内容将会被**丢弃**。当子组件模板只有一个没有属性的插槽时，父组件传入的整个内容片段将插入到插槽所在的 DOM 位置，并替换掉插槽标签本身。
+>
+> 最初在 `<slot>` 标签中的任何内容都被视为**备用内容**。备用内容在子组件的作用域内编译，并且只有在宿主元素为空，且没有要插入的内容时才显示备用内容。
+>
+> 假定 `my-component` 组件有如下模板：
+>
+> ```
+> <div>
+>   <h2>我是子组件的标题</h2>
+>   <slot>
+>     只有在没有要分发的内容时才会显示。
+>   </slot>
+> </div>
+>
+> ```
+>
+> 父组件模板：
+>
+> ```
+> <div>
+>   <h1>我是父组件的标题</h1>
+>   <my-component>
+>     <p>这是一些初始内容</p>
+>     <p>这是更多的初始内容</p>
+>   </my-component>
+> </div>
+> ```
+>
+> 渲染结果：
+>
+> ```
+> <div>
+>   <h1>我是父组件的标题</h1>
+>   <div>
+>     <h2>我是子组件的标题</h2>
+>     <p>这是一些初始内容</p>
+>     <p>这是更多的初始内容</p>
+>   </div>
+> </div>
+>
+> ```
+>
+> ### [具名插槽](https://cn.vuejs.org/v2/guide/components.html#具名插槽)
+>
+> `<slot>` 元素可以用一个特殊的特性 `name` 来进一步配置如何分发内容。多个插槽可以有不同的名字。具名插槽将匹配内容片段中有对应 `slot` 特性的元素。
+>
+> 仍然可以有一个匿名插槽，它是**默认插槽**，作为找不到匹配的内容片段的备用插槽。如果没有默认插槽，这些找不到匹配的内容片段将被抛弃。
+>
+> 例如，假定我们有一个 `app-layout` 组件，它的模板为：
+>
+> ```
+> <div class="container">
+>   <header>
+>     <slot name="header"></slot>
+>   </header>
+>   <main>
+>     <slot></slot>
+>   </main>
+>   <footer>
+>     <slot name="footer"></slot>
+>   </footer>
+> </div>
+> ```
+>
+> 父组件模板：
+>
+> ```
+> <app-layout>
+>   <h1 slot="header">这里可能是一个页面标题</h1>
+>
+>   <p>主要内容的一个段落。</p>
+>   <p>另一个主要段落。</p>
+>
+>   <p slot="footer">这里有一些联系信息</p>
+> </app-layout>
+>
+> ```
+>
+> 渲染结果为：
+>
+> ```
+> <div class="container">
+>   <header>
+>     <h1>这里可能是一个页面标题</h1>
+>   </header>
+>   <main>
+>     <p>主要内容的一个段落。</p>
+>     <p>另一个主要段落。</p>
+>   </main>
+>   <footer>
+>     <p>这里有一些联系信息</p>
+>   </footer>
+> </div>
+>
+> ```
+>
+> 在设计组合使用的组件时，内容分发 API 是非常有用的机制。
+>
+> ### [作用域插槽](https://cn.vuejs.org/v2/guide/components.html#作用域插槽)
+>
+> > 2.1.0 新增
+>
+> 作用域插槽是一种特殊类型的插槽，用作一个 (能被传递数据的) 可重用模板，来代替已经渲染好的元素。
+>
+> 在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：
+>
+> ```
+> <div class="child">
+>   <slot text="hello from child"></slot>
+> </div>
+>
+> ```
+>
+> 在父级中，具有特殊特性 `slot-scope` 的 `<template>` 元素必须存在，表示它是作用域插槽的模板。`slot-scope` 的值将被用作一个临时变量名，此变量接收从子组件传递过来的 prop 对象：
+>
+> ```
+> <div class="parent">
+>   <child>
+>     <template slot-scope="props">
+>       <span>hello from parent</span>
+>       <span>{{ props.text }}</span>
+>     </template>
+>   </child>
+> </div>
+>
+> ```
+>
+> 如果我们渲染上述模板，得到的输出会是：
+>
+> ```
+> <div class="parent">
+>   <div class="child">
+>     <span>hello from parent</span>
+>     <span>hello from child</span>
+>   </div>
+> </div>
+>
+> ```
+>
+> > 在 2.5.0+，`slot-scope` 能被用在任意元素或组件中而不再局限于 `<template>`。
+>
+> 作用域插槽更典型的用例是在列表组件中，允许使用者自定义如何渲染列表的每一项：
+>
+> ```
+> <my-awesome-list :items="items">
+>   <!-- 作用域插槽也可以是具名的 -->
+>   <li
+>     slot="item"
+>     slot-scope="props"
+>     class="my-fancy-item">
+>     {{ props.text }}
+>   </li>
+> </my-awesome-list>
+>
+> ```
+>
+> 列表组件的模板：
+>
+> ```
+> <ul>
+>   <slot name="item"
+>     v-for="item in items"
+>     :text="item.text">
+>     <!-- 这里写入备用内容 -->
+>   </slot>
+> </ul>
+>
+> ```
+>
+> #### 解构
+>
+> `slot-scope` 的值实际上是一个可以出现在函数签名参数位置的合法的 JavaScript 表达式。这意味着在受支持的环境 (单文件组件或现代浏览器) 中，您还可以在表达式中使用 ES2015 解构：
+
+> ```
+> <child>
+>   <span slot-scope="{ text }">{{ text }}</span>
+> </child>
+> ```
+
+
+
+
+
+
+
+# 通常浏览器的刷新频率小于20秒
+
+
+
+
+
+# betterScroller用于移动端轮播图
+
+https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/
+
+
+
+
+
+
+
+
+
+# keep-alive
+
+#### 1.基本用法
+
+vue2.0提供了一个keep-alive组件
+用来缓存组件,避免多次加载相应的组件,减少性能消耗
+
+```
+<keep-alive>
+<component>
+  <!-- 组件将被缓存 -->
+</component>
+</keep-alive>
+```
+
+有时候 可能需要缓存整个站点的所有页面,而页面一般一进去都要触发请求的
+在使用`keep-alive`的情况下
+
+```
+<keep-alive><router-view></router-view></keep-alive>
+```
+
+将首次触发请求写在`created`钩子函数中,就能实现缓存,
+比如列表页,去了详情页 回来,还是在原来的页面
+
+#### 2.缓存部分页面或者组件
+
+##### (1)使用router. meta属性
+
+```
+// 这是目前用的比较多的方式
+<keep-alive>
+    <router-view v-if="$route.meta.keepAlive"></router-view>
+</keep-alive>
+<router-view v-if="!$route.meta.keepAlive"></router-view>
+```
+
+`router`设置
+
+```
+... 
+  routes: [
+    { path: '/', redirect: '/index',  component: Index, meta: { keepAlive: true }},
+    {
+      path: '/common',
+      component: TestParent,
+      children: [
+        { path: '/test2', component: Test2, meta: { keepAlive: true } } 
+      ]
+    }
+    ....
+    // 表示index和test2都使用keep-alive
+```
+
+##### (2).使用新增属性inlcude/exclude
+
+2.1.0后提供了`include/exclude`两个属性 可以针对性缓存相应的组件
+
+```
+<!-- comma-delimited string -->
+<keep-alive include="a,b">
+  <component :is="view"></component>
+</keep-alive>
+<!-- regex (use v-bind) -->
+<keep-alive :include="/a|b/">
+  <component :is="view"></component>
+</keep-alive>
+
+//其中a,b是组件的name
+```
+
+`注意`:这种方法都是预先知道组件的名称的
+
+##### (2)动态判断
+
+```
+<keep-alive :include="includedComponents">
+  <router-view></router-view>
+</keep-alive>
+```
+
+`includedComponents`动态设置即可
+
+
+
+
+
+![Snipaste_2017-12-16_22-37-08](.\img\Snipaste_2017-12-16_22-37-08.png)
+
+
+
+
+
+![Snipaste_2017-12-16_22-51-11](.\img\Snipaste_2017-12-16_22-51-11.png)
